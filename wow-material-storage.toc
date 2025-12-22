@@ -1,0 +1,12 @@
+## Interface: 30300
+## Version: 0.0.1
+## Title : Material Storage
+## Notes: Material Storage
+## Author: Zamralik
+
+src\1-configuration.lua
+src\2-data.lua
+src\3-server-proxy.lua
+src\4-create-panel.lua
+src\5-facade.lua
+src\6-commands.lua
