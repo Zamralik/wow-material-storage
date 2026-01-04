@@ -37,12 +37,9 @@ local function withdraw(item_template_id)
 end
 
 function MaterialStorage_onListAllResponse(player_name, data)
-	print("Received LIST_ALL_RESPONSE from server:")
-
 	for i, entry in ipairs(data[1]) do
 		local item_template_id = entry.item_template_id
 		local quantity = entry.quantity
-		print(" Item ID:", item_template_id, " Quantity:", quantity)
 		item_quantities[item_template_id] = quantity
 	end
 
@@ -59,7 +56,7 @@ function MaterialStorage_onWithdrawResponse(player_name, data)
 		return
 	end
 
-	item_quantities[item_template_id] = item_quantities[item_template_id] - quantity
+	item_quantities[item_template_id] = quantity
 
 	MaterialStorage:RefreshWindow()
 end
@@ -72,10 +69,8 @@ function MaterialStorage_onDepositResponse(player_name, data)
 	local item_template_id = data[1] or 0
 	local quantity = data[2] or 0
 
-	print("Received DEPOSIT_RESPONSE from server: Item ID:", item_template_id, " Quantity:", quantity)
-
 	if item_template_id == 0 then
-		print("Withdraw failed: Item not found or insufficient quantity.")
+		print("Deposit failed.")
 
 		return
 	end
