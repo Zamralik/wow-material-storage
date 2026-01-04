@@ -13,9 +13,7 @@ function MaterialStorage:RefreshWindow()
 
 	print("Refreshing Material Storage window")
 
-	for i, button in ipairs(internal.itemSlots) do
-		internal.updateItemButton(button, internal.getItemQuantity(button:GetID()))
-	end
+	internal.refreshAllButtons()
 end
 
 function MaterialStorage:ShowWindow()
@@ -23,6 +21,7 @@ function MaterialStorage:ShowWindow()
 		internal.initialize()
 	end
 
+	internal.refreshAllButtons()
 	internal.window:Show()
 	PlaySound("GuildVaultOpen")
 end

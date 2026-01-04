@@ -29,6 +29,13 @@ local function updateItemButton(button)
 end
 internal.updateItemButton = updateItemButton
 
+local function refreshAllButtons()
+	for i, button in ipairs(internal.itemSlots) do
+		internal.updateItemButton(button, internal.getItemQuantity(button:GetID()))
+	end
+end
+internal.refreshAllButtons = refreshAllButtons
+
 local function initializeItemButton(button, item)
 	button:SetID(item.id)
 	button.isBag = true
@@ -134,5 +141,4 @@ local function initialize()
 	scroll_frame:SetScrollChild(content)
 	scroll_frame:EnableMouse(true)
 end
-
 internal.initialize = initialize
