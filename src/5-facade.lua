@@ -11,8 +11,6 @@ function MaterialStorage:RefreshWindow()
 		return
 	end
 
-	print("Refreshing Material Storage window")
-
 	internal.refreshAllButtons()
 end
 
