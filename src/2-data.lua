@@ -4009,12 +4009,6 @@ internal.data = {
 			categories = { 164, 755, 186 },
 		},
 		{
-			id = 8181,
-			name = "Hunting Rifle",
-			icon = "Interface\\Icons\\INV_Weapon_Rifle_04",
-			categories = { 186 },
-		},
-		{
 			id = 1015,
 			name = "Lean Wolf Flank",
 			icon = "Interface\\Icons\\INV_Misc_Food_14",
