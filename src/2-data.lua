@@ -778,19 +778,25 @@ internal.data = {
 			id = 11512,
 			name = "Patch of Tainted Skin",
 			icon = "Interface\\Icons\\INV_Misc_Pelt_02",
-			categories = { 393 },
+			categories = { 0, 393 },
 		},
 		{
 			id = 11513,
 			name = "Tainted Vitriol",
 			icon = "Interface\\Icons\\INV_Misc_Gem_Pearl_01",
-			categories = { 186 },
+			categories = { 0, 186 },
 		},
 		{
 			id = 11514,
 			name = "Fel Creep",
 			icon = "Interface\\Icons\\Spell_Nature_Acid_01",
-			categories = { 182 },
+			categories = { 0, 182 },
+		},
+		{
+			id = 11515,
+			name = "Corrupted Soul Shard",
+			icon = "Interface\\Icons\\INV_Enchant_ShardRadientSmall",
+			categories = { 0 },
 		},
 		{
 			id = 5373,
