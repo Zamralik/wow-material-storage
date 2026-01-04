@@ -2,11 +2,11 @@ local _, internal = ...
 
 internal.initialized = false
 
-local function getItemInfo(item_id)
-	local item_info = { GetItemInfo(item_id) }
+local function getItemInfo(item_template_id)
+	local item_info = { GetItemInfo(item_template_id) }
 
 	if not item_info[1] then
-		-- print("Missing data for item with id:", item_id)
+		-- print("Missing data for item with id:", item_template_id)
 		return nil
 	end
 
@@ -15,7 +15,7 @@ local function getItemInfo(item_id)
 	-- local item_rarity = item_info[3]
 	local item_icon_texture = item_info[10]
 
-	local quantity = internal.getItemQuantity()
+	local quantity = internal.getItemQuantity(item_template_id)
 
 	return {
 		name = item_name,
@@ -54,21 +54,34 @@ local function initializeItemButton(button, item_info)
 	SetItemButtonTexture(button, item_info.icon)
 	updateItemButton(button, item_info.quantity)
 
-	button:SetScript("OnClick", function(self, button, down)
-		if button == "LeftButton" then
-			print("Item:", item_info.name or button:GetID())
+	button:SetScript(
+		"OnClick",
+		function(self, button_name, down)
+			if button_name == "LeftButton" then
+				print("Item:", item_info.name or button:GetID())
+			end
+
+			if button_name == "RightButton" then
+				internal.withdraw(button:GetID())
+			end
 		end
-	end)
+	)
 
-	button:HookScript("OnEnter", function()
-		GameTooltip:SetOwner(button, "ANCHOR_TOP")
-		GameTooltip:SetHyperlink(item_info.link)
-		GameTooltip:Show()
-	end)
+	button:HookScript(
+		"OnEnter",
+		function()
+			GameTooltip:SetOwner(button, "ANCHOR_TOP")
+			GameTooltip:SetHyperlink(item_info.link)
+			GameTooltip:Show()
+		end
+	)
 
-	button:HookScript("OnLeave", function()
-		GameTooltip:Hide()
-	end)
+	button:HookScript(
+		"OnLeave",
+		function()
+			GameTooltip:Hide()
+		end
+	)
 end
 
 
@@ -105,6 +118,7 @@ local function generateItemSlots()
 		button:SetPoint("TOPLEFT", content, "TOPLEFT", offset_x, offset_y)
 		button:SetID(item.id)
 		button.isBag = true
+		button:RegisterForClicks("RightButtonUp")
 		SetItemButtonTexture(button, "Interface\PaperDoll\UI-Backpack-EmptySlot.blp")
 
 		item_info = getItemInfo(item.id)
@@ -131,6 +145,7 @@ local function generateItemSlots()
 
 	loading_frame:SetScript("OnUpdate", function()
 		if last_index < 1 then
+			pending_buttons = nil
 			loading_frame:Hide()
 			loading_frame:SetScript("OnUpdate", nil)
 			loading_frame:SetParent(nil)
@@ -196,6 +211,8 @@ local function initialize()
 
 	local content = CreateFrame("Frame", nil, scroll_frame)
 	internal.content = content
+
+	internal.listAll()
 
 	generateItemSlots()
 

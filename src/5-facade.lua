@@ -11,8 +11,10 @@ function MaterialStorage:RefreshWindow()
 		return
 	end
 
+	print("Refreshing Material Storage window")
+
 	for i, button in ipairs(internal.itemSlots) do
-		internal.updateItemButton(button, internal.getItemQuantity())
+		internal.updateItemButton(button, internal.getItemQuantity(button:GetID()))
 	end
 end
 
@@ -43,9 +45,9 @@ function MaterialStorage:ToggleWindow()
 end
 
 function MaterialStorage:DepositAll()
-	print("DepositAll is not implemented yet")
+	internal.depositAll()
 end
 
-function MaterialStorage:Withdraw(item_id, quantity)
+function MaterialStorage:Withdraw(item_template_id, quantity)
 	print("Withdraw is not implemented yet")
 end
