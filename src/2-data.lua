@@ -4039,12 +4039,6 @@ internal.data = {
 			categories = { 197 },
 		},
 		{
-			id = 1179,
-			name = "Ice Cold Milk",
-			icon = "Interface\\Icons\\INV_Drink_Milk_01",
-			categories = { 185 },
-		},
-		{
 			id = 36860,
 			name = "Eternal Fire",
 			icon = "Interface\\Icons\\INV_Elemental_Eternal_Fire",
