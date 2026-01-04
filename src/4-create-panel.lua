@@ -2,29 +2,6 @@ local _, internal = ...
 
 internal.initialized = false
 
-local function getItemInfo(item_template_id)
-	local item_info = { GetItemInfo(item_template_id) }
-
-	if not item_info[1] then
-		-- print("Missing data for item with id:", item_template_id)
-		return nil
-	end
-
-	local item_name = item_info[1]
-	local item_link = item_info[2]
-	-- local item_rarity = item_info[3]
-	local item_icon_texture = item_info[10]
-
-	local quantity = internal.getItemQuantity(item_template_id)
-
-	return {
-		name = item_name,
-		link = item_link,
-		icon = item_icon_texture,
-		quantity = quantity,
-	}
-end
-
 local function makeFrameMovable(frame)
 	frame:SetMovable(true)
 	frame:SetClampedToScreen(true)
@@ -38,7 +15,9 @@ local function makeFrameCloseOnEscape(frame)
 	tinsert(UISpecialFrames, frame:GetName())
 end
 
-local function updateItemButton(button, quantity)
+local function updateItemButton(button)
+	local quantity = internal.getItemQuantity(button:GetID())
+
 	SetItemButtonCount(button, quantity)
 
 	if quantity == 0
@@ -50,15 +29,20 @@ local function updateItemButton(button, quantity)
 end
 internal.updateItemButton = updateItemButton
 
-local function initializeItemButton(button, item_info)
-	SetItemButtonTexture(button, item_info.icon)
-	updateItemButton(button, item_info.quantity)
+local function initializeItemButton(button, item)
+	button:SetID(item.id)
+	button.isBag = true
+	button:RegisterForClicks("LeftButtonUp", "RightButtonUp")
+
+	button.categories = item.categories
+	SetItemButtonTexture(button, item.icon)
+	updateItemButton(button, item.quantity)
 
 	button:SetScript(
 		"OnClick",
 		function(self, button_name, down)
 			if button_name == "LeftButton" then
-				print("Item:", item_info.name or button:GetID())
+				print("Item:", button:GetID())
 			end
 
 			if button_name == "RightButton" then
@@ -71,7 +55,7 @@ local function initializeItemButton(button, item_info)
 		"OnEnter",
 		function()
 			GameTooltip:SetOwner(button, "ANCHOR_TOP")
-			GameTooltip:SetHyperlink(item_info.link)
+			GameTooltip:SetHyperlink("item:"..button:GetID())
 			GameTooltip:Show()
 		end
 	)
@@ -83,7 +67,6 @@ local function initializeItemButton(button, item_info)
 		end
 	)
 end
-
 
 -- Function to update the material list display
 local function generateItemSlots()
@@ -116,77 +99,9 @@ local function generateItemSlots()
 		local offset_y = internal.ITEM_SLOT_OFFSET_Y - row_index * internal.ITEM_SLOT_WIDTH
 
 		button:SetPoint("TOPLEFT", content, "TOPLEFT", offset_x, offset_y)
-		button:SetID(item.id)
-		button.isBag = true
-		button:RegisterForClicks("RightButtonUp")
-		SetItemButtonTexture(button, "Interface\PaperDoll\UI-Backpack-EmptySlot.blp")
 
-		item_info = getItemInfo(item.id)
-
-		if item_info then
-			initializeItemButton(button, item_info)
-		else
-			tinsert(pending_buttons, button)
-		end
+		initializeItemButton(button, item)
 	end
-
-	if not next(pending_buttons) then
-		return
-	end
-
-	local loading_frame = CreateFrame("Frame", nil, UIParent)
-
-	local last_index = #pending_buttons
-
-	local retry = 0
-
-	local max_throttle = 10
-	local throttle = max_throttle
-
-	loading_frame:SetScript("OnUpdate", function()
-		if last_index < 1 then
-			pending_buttons = nil
-			loading_frame:Hide()
-			loading_frame:SetScript("OnUpdate", nil)
-			loading_frame:SetParent(nil)
-			return
-		end
-
-		if throttle < max_throttle then
-			throttle = throttle + 1
-			return
-		end
-
-		throttle = 0
-
-		local last_button = pending_buttons[last_index]
-
-		if retry > 10 then
-			print("Failed to load item data for item id:", last_button:GetID())
-			last_index = 0
-			return
-		end
-
-		print("Loading item data for item id:", last_button:GetID())
-		local item_info = getItemInfo(last_button:GetID())
-
-		if not item_info then
-			retry = retry + 1
-
-			if retry > 1 then
-				return
-			end
-
-			GameTooltip:SetOwner(UIParent)
-			GameTooltip:SetHyperlink("item:" .. last_button:GetID())
-
-			return
-		end
-
-		retry = 0
-		last_index = last_index - 1
-		initializeItemButton(last_button, item_info)
-	end)
 end
 
 local function initialize()
