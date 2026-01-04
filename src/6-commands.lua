@@ -27,6 +27,7 @@ SLASH_MATERIALSTORAGE_DEPOSIT1 = "/msd"
 
 SlashCmdList["MATERIALSTORAGE_DEPOSIT"] = function(msg)
 	if msg == "" then
+		print("Usage: /msd <bag_id> <slot_id>")
 		return
 	end
 

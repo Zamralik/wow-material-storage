@@ -3,6 +3,7 @@
 ## Title : Material Storage
 ## Notes: Material Storage
 ## Author: Zamralik
+## Dependency : CMH
 
 src\1-configuration.lua
 src\2-data.lua
