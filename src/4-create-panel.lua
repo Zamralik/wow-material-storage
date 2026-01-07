@@ -15,17 +15,46 @@ local function makeFrameCloseOnEscape(frame)
 	tinsert(UISpecialFrames, frame:GetName())
 end
 
+local function format_quantity(quantity)
+	if quantity >= internal.MAX_QUANTITY then
+		return "MAX"
+	end
+
+	if quantity < 10000 then
+		-- 0 to 9999
+		return quantity
+	end
+
+	if quantity < 1000000 then
+		-- 10k to 999k
+		return math.floor(quantity / 1000) .. "k"
+	end
+
+	if quantity < 100000000 then
+		-- 1M to 99M
+		return math.floor(quantity / 1000000) .. "M"
+	end
+
+	-- 100M or more
+	return "*"
+end
+
 local function updateItemButton(button)
 	local quantity = internal.getItemQuantity(button:GetID())
 
-	SetItemButtonCount(button, quantity)
+	button.count = quantity;
 
-	if quantity == 0
-	then
+	local counter = _G[button:GetName().."Count"];
+
+	if quantity == 0 then
+		counter:Hide()
 		button:SetAlpha(0.3)
-	else
-		button:SetAlpha(1)
+		return
 	end
+
+	counter:SetText(format_quantity(quantity));
+	counter:Show()
+	button:SetAlpha(1)
 end
 internal.updateItemButton = updateItemButton
 
