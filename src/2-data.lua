@@ -1,5 +1,12 @@
 local _, internal = ...
 
+local function appendData(extra_data)
+	for _, item in ipairs(extra_data) do
+		tinsert(internal.data.items, item)
+	end
+end
+internal.appendData = appendData
+
 internal.data = {
 	categories = {
 		[0] = "Miscellaneous",
@@ -17,7 +24,9 @@ internal.data = {
 		[393] = "Skinning",
 		[197] = "Tailoring",
 	},
-	items = {
+	items = {},
+	--[[
+	old_items = {
 		{
 			id = 765,
 			name = "Silverleaf",
@@ -4213,4 +4222,5 @@ internal.data = {
 			categories = { 0 },
 		},
 	},
+	]]
 }

@@ -106,12 +106,14 @@ end
 
 -- Function to update the material list display
 local function generateItemSlots()
+
 	local content = internal.content
 
 	local item_slots = {}
 	internal.itemSlots = item_slots
 
 	local data = internal.data
+
 	internal.data = nil
 
 	content:SetSize(
